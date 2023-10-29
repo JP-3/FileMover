@@ -26,10 +26,9 @@ namespace FileMover
                     name = $"{name} {item}";
                     string movieYear = string.Empty;
                 }
-                TMDbClient client = new TMDbClient(File.ReadAllText(@"C:\\Plex\Key.txt"));
+                TMDbClient client = new TMDbClient(Base.data[PropertiesEnum.apiKey.ToString()]);
 
                 SearchContainer<SearchMovie> movie = new SearchContainer<SearchMovie>();
-
                 movie = client.SearchMovieAsync(name.TrimStart(), 0, false, year, null, year).Result;
                 if (movie.TotalResults == 0)
                 {
@@ -40,33 +39,53 @@ namespace FileMover
                 var genre = movie.Results.FirstOrDefault().GenreIds;
                 try
                 {
-                    Console.WriteLine("Starting Copy");
-                    var movedLocation = string.Empty;
+                    Console.WriteLine($"Starting Copy {fileName}");
+
                     if (genre.Contains(10751)) //Kids Movies
                     {
-                        File.Copy(fullFilePath, $@"\\ripper\Kids Movies\{fileName}", false);
-                        movedLocation = "Kids Movies";
+                        if (CheckFileHasCopied($"{Base.data[PropertiesEnum.KidsMovies.ToString()]}{fileName}"))
+                        {
+                            Console.WriteLine($"File {fileName} location Kids Movies already exists");
+                        }
+                        else
+                        {
+                            File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.KidsMovies.ToString()]}{fileName}", false);
+                            Console.WriteLine($"File {fileName} moved to Kids Movies");
+                        }
                     }
                     else if (fileName.ToLower().Contains("2160p") || fileSizeGB > 16)
                     {
-                        File.Copy(fullFilePath, $@"\\ripper\4k2\{fileName}", false);
-                        movedLocation = "4K Movies";
+                        if (CheckFileHasCopied($"{Base.data[PropertiesEnum.Movies4K.ToString()]}{fileName}"))
+                        {
+                            Console.WriteLine($"File {fileName} location 4K Movies already exists");
+                        }
+                        else
+                        {
+                            File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies4K.ToString()]}{fileName}", false);
+                            Console.WriteLine($"File {fileName} moved to 4K Movies");
+                        }
                     }
                     else
                     {
-                        File.Copy(fullFilePath, $@"\\ripper\Movies\{fileName}", false);
-                        movedLocation = "Movies";
+                        if (CheckFileHasCopied($"{Base.data[PropertiesEnum.Movies.ToString()]}{fileName}"))
+                        {
+                            Console.WriteLine($"File {fileName} location Movies already exists");
+                        }
+                        else
+                        {
+                            File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies.ToString()]}{fileName}", false);
+                            Console.WriteLine($"File {fileName} moved to Movies");
+                        }
                     }
-                    CheckFileHasCopied(fullFilePath);
-                    Console.WriteLine($"File {fileName} moved to {movedLocation}");
                 }
                 catch
                 {
                     //Swallow the error if file already exists
-                    Console.WriteLine($"Skipped file {fileName}");
+                    Console.WriteLine($"File Exists, skipped file {fileName}");
                 }
             }
         }
+
         private bool CheckFileHasCopied(string FilePath)
         {
             try
@@ -82,7 +101,6 @@ namespace FileMover
             catch (Exception)
             {
                 Thread.Sleep(100);
-                Console.WriteLine("Not Done");
                 return CheckFileHasCopied(FilePath);
             }
         }
