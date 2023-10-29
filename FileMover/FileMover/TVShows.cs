@@ -21,7 +21,7 @@
                 }
                 name = $"{name} {item}";
             }
-            name = name.TrimStart().Replace(" ", ".");
+            name = name.TrimStart().Replace(".", " ");
             var tvShows = Directory.GetDirectories(Base.data["TV"]);
             var tvFile = Path.GetFileName(fullFilePath);
             foreach (var tvShow in tvShows)
