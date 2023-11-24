@@ -1,9 +1,12 @@
-﻿namespace FileMover
+﻿using MyEmails;
+
+namespace FileMover
 {
     internal class TVShows
     {
         public void MoveFile(string fullFilePath, string fileName, string episode)
         {
+            Email email = new Email();
             var split = fileName.Split('.');
             string name = string.Empty;
             string season = string.Empty;
@@ -22,7 +25,7 @@
                 name = $"{name} {item}";
             }
             name = name.TrimStart().Replace(".", " ");
-            var tvShows = Directory.GetDirectories(Base.data["TV"]);
+            var tvShows = Directory.GetDirectories(Base.data[PropertiesEnum.TV.ToString()]);
             var tvFile = Path.GetFileName(fullFilePath);
             foreach (var tvShow in tvShows)
             {
@@ -31,6 +34,7 @@
                 {
                     File.Copy(fullFilePath, @$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}");
                     Console.WriteLine($"Finished Copy {tvFile}");
+                    email.SendEmail($"Finished Copy {tvFile}", "");
                     break;
                 }
                 catch

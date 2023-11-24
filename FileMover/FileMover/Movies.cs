@@ -35,10 +35,11 @@ namespace FileMover
                     movie = client.SearchMovieAsync(name.TrimStart()).Result;
                 }
 
-                //Get the genre ID, 10751 is family
-                var genre = movie.Results.FirstOrDefault().GenreIds;
                 try
                 {
+                    //Get the genre ID, 10751 is family
+                    var genre = movie.Results.FirstOrDefault().GenreIds;
+
                     Console.WriteLine($"Starting Copy {fileName}");
 
                     if (genre.Contains(10751)) //Kids Movies
@@ -78,10 +79,10 @@ namespace FileMover
                         }
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     //Swallow the error if file already exists
-                    Console.WriteLine($"File Exists, skipped file {fileName}");
+                    Console.WriteLine($"File Exists, skipped file {fileName}\r\n{ex}");
                 }
             }
         }
