@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using TMDbLib.Client;
+﻿using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
+using MyEmails;
 
 namespace FileMover
 {
@@ -9,6 +9,7 @@ namespace FileMover
     {
         public void MoveFile(string fullFilePath, string fileName, int year)
         {
+            Email email = new Email();
             FileInfo fileInfo = new FileInfo(fullFilePath);
             double fileSizeGB = fileInfo.Length / 1024 / 1024 / 1024;
             if (!fileName.ToLower().Contains("sample") || fileInfo.Length > 500000000)
@@ -41,17 +42,20 @@ namespace FileMover
                     var genre = movie.Results.FirstOrDefault().GenreIds;
 
                     Console.WriteLine($"Starting Copy {fileName}");
+                    email.SendEmail($"Starting Copy {fileName}");
 
                     if (genre.Contains(10751)) //Kids Movies
                     {
                         if (CheckFileHasCopied($"{Base.data[PropertiesEnum.KidsMovies.ToString()]}{fileName}"))
                         {
                             Console.WriteLine($"File {fileName} location Kids Movies already exists");
+                            email.SendEmail($"File {fileName} location Kids Movies already exists");
                         }
                         else
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.KidsMovies.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to Kids Movies");
+                            email.SendEmail($"File {fileName} moved to Kids Movies");
                         }
                     }
                     else if (fileName.ToLower().Contains("2160p") || fileSizeGB > 16)
@@ -59,11 +63,13 @@ namespace FileMover
                         if (CheckFileHasCopied($"{Base.data[PropertiesEnum.Movies4K.ToString()]}{fileName}"))
                         {
                             Console.WriteLine($"File {fileName} location 4K Movies already exists");
+                            email.SendEmail($"File {fileName} location 4K Movies already exists");
                         }
                         else
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies4K.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to 4K Movies");
+                            email.SendEmail($"File {fileName} moved to 4K Movies");
                         }
                     }
                     else
@@ -71,11 +77,13 @@ namespace FileMover
                         if (CheckFileHasCopied($"{Base.data[PropertiesEnum.Movies.ToString()]}{fileName}"))
                         {
                             Console.WriteLine($"File {fileName} location Movies already exists");
+                            email.SendEmail($"File {fileName} location Movies already exists");
                         }
                         else
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to Movies");
+                            email.SendEmail($"File {fileName} moved to Movies");
                         }
                     }
                 }
@@ -83,6 +91,8 @@ namespace FileMover
                 {
                     //Swallow the error if file already exists
                     Console.WriteLine($"File Exists, skipped file {fileName}\r\n{ex}");
+                    email.SendEmail($"File Exists, skipped file {fileName}", ex.ToString());
+
                 }
             }
         }

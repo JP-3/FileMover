@@ -29,8 +29,8 @@ while (true) { System.Threading.Thread.Sleep(60000); } //infinite loop
 static void OnChanged(object source, FileSystemEventArgs e)
 {
     Email email = new Email();
-    email.SendEmail("FileMover Started", "");
-    //System.Threading.Thread.Sleep(10000);
+    email.SendEmail("FileMover Started");
+
     string pattern1900s = @"\.19\d\d\.";
     string pattern2000s = @"\.20\d\d\.";
     string patternTvShow1 = @"s\d\de\d\d"; //S10EE11
@@ -110,5 +110,5 @@ static void OnChanged(object source, FileSystemEventArgs e)
         }
         Base.processedFiles[Path.GetFileName(folder)] = true;
     }
-    email.SendEmail("FileMover Finished", "");
+    email.SendEmail("FileMover Finished");
 }
