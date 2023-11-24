@@ -32,7 +32,6 @@ namespace FileMover
                 Console.WriteLine($"Starting Copy {tvFile}");
                 try
                 {
-                    email.SendEmail($"Started Copy {tvFile}");
                     File.Copy(fullFilePath, @$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}");
                     Console.WriteLine($"Finished Copy {tvFile}");
                     email.SendEmail($"Finished Copy {tvFile}");
@@ -44,7 +43,6 @@ namespace FileMover
                         $"Copy Failed {Base.data[PropertiesEnum.TV.ToString()]}{name}\\Season {season}\\{tvFile}\r\n");
 
                     Console.WriteLine($"Copy Failed {Base.data[PropertiesEnum.TV.ToString()]}{name}\\Season {season}\\{tvFile}");
-                    email.SendEmail($"Copy Failed", $"Copy Failed {Base.data[PropertiesEnum.TV.ToString()]}{name}\\Season {season}\\{tvFile}");
                     break;
                 }
             }
