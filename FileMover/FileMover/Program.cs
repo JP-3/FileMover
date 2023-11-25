@@ -34,7 +34,6 @@ catch (Exception)
     email.SendEmail("FileMover Crashed");
 }
 
-
 static void OnChanged(object source, FileSystemEventArgs e)
 {
     try

@@ -34,7 +34,6 @@ namespace FileMover
                 {
                     File.Copy(fullFilePath, @$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}");
                     Console.WriteLine($"Finished Copy {tvFile}");
-                   // email.SendEmail($"Finished Copy {tvFile}");
                     break;
                 }
                 catch

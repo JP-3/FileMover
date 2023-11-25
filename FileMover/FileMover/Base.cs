@@ -13,7 +13,7 @@ namespace FileMover
         {
             if (data.Count == 0)
             {
-                foreach (var row in File.ReadAllLines(@"C:\\Plex\key.txt"))
+                foreach (var row in File.ReadAllLines(@"C:\\git\key.txt"))
                     data.Add(row.Split('=')[0], string.Join("=", row.Split('=').Skip(1).ToArray()));
                 return data;
             }
@@ -21,7 +21,5 @@ namespace FileMover
         }
 
         public static Dictionary<string, bool> processedFiles = new Dictionary<string, bool>();
-
-
     }
 }
