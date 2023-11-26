@@ -9,7 +9,6 @@ namespace FileMover
     {
         public void MoveFile(string fullFilePath, string fileName, int year)
         {
-            Email email = new Email();
             FileInfo fileInfo = new FileInfo(fullFilePath);
             double fileSizeGB = fileInfo.Length / 1024 / 1024 / 1024;
             if (!fileName.ToLower().Contains("sample") || fileInfo.Length > 500000000)

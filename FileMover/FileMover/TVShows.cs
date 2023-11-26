@@ -6,7 +6,6 @@ namespace FileMover
     {
         public void MoveFile(string fullFilePath, string fileName, string episode)
         {
-            Email email = new Email();
             var split = fileName.Split('.');
             string name = string.Empty;
             string season = string.Empty;
