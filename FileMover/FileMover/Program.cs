@@ -1,6 +1,7 @@
 ﻿using FileMover;
 using System.Text.RegularExpressions;
 using MyEmails;
+using System.Text;
 
 Base.GetProperties();
 FileSystemWatcher watcher = new FileSystemWatcher();
@@ -49,6 +50,7 @@ static void OnChanged(object source, FileSystemEventArgs e)
         string patternTvShow4 = @"s\de\d\d";   //S1E1
         string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
+        StringBuilder movedFiles = new StringBuilder();
 
         foreach (var folder in directories)
         {
@@ -114,13 +116,14 @@ static void OnChanged(object source, FileSystemEventArgs e)
                                 var year = int.Parse(Regex.Match(fileName, pattern1900s).Value.Replace(".", ""));
                                 movies.MoveFile(file, fileName, year);
                             }
+                            movedFiles.AppendLine(fileName);
                         }
                     }
                 }
             }
             Base.processedFiles[Path.GetFileName(folder)] = true;
         }
-        email.SendEmail("FileMover Finished");
+        email.SendEmail("FileMover Finished", movedFiles.ToString());
     }
     catch (Exception ex)
     {
