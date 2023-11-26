@@ -122,7 +122,9 @@ static void OnChanged(object source, FileSystemEventArgs e)
             }
             Base.processedFiles[Path.GetFileName(folder)] = true;
         }
-        email.SendEmail("FileMover Finished", movedFiles.ToString());
+        string s = movedFiles.ToString();
+
+        email.SendEmail("FileMover Finished", movedFiles.ToString().Replace(" ", ""));
     }
     catch (Exception ex)
     {
