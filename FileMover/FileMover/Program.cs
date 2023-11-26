@@ -28,17 +28,17 @@ try
 {
     while (true) { System.Threading.Thread.Sleep(60000); } //infinite loop
 }
-catch (Exception)
+catch (Exception ex)
 {
     Email email = new Email();
-    email.SendEmail("FileMover Crashed");
+    email.SendEmail("FileMover Crashed", ex.ToString());
 }
 
 static void OnChanged(object source, FileSystemEventArgs e)
 {
+    Email email = new Email();
     try
     {
-        Email email = new Email();
         email.SendEmail("FileMover Started");
 
         string pattern1900s = @"\.19\d\d\.";
@@ -47,7 +47,7 @@ static void OnChanged(object source, FileSystemEventArgs e)
         string patternTvShow2 = @"s\d\de\d";   //S10E1
         string patternTvShow3 = @"s\de\d\d";   //S1E11
         string patternTvShow4 = @"s\de\d\d";   //S1E1
-        string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()]; ;
+        string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
 
         foreach (var folder in directories)
@@ -122,9 +122,8 @@ static void OnChanged(object source, FileSystemEventArgs e)
         }
         email.SendEmail("FileMover Finished");
     }
-    catch
+    catch (Exception ex)
     {
-        Email email = new Email();
-        email.SendEmail("FileMover Crashed");
+        email.SendEmail("FileMover Crashed", ex.ToString());
     }
 }
