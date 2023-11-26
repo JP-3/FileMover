@@ -7,10 +7,12 @@ namespace FileMover
 {
     internal class Movies
     {
-        public void MoveFile(string fullFilePath, string fileName, int year)
+        public string MoveFile(string fullFilePath, string fileName, int year)
         {
             FileInfo fileInfo = new FileInfo(fullFilePath);
             double fileSizeGB = fileInfo.Length / 1024 / 1024 / 1024;
+            string returnString = string.Empty;
+
             if (!fileName.ToLower().Contains("sample") || fileInfo.Length > 500000000)
             {
                 string name = string.Empty;
@@ -52,6 +54,7 @@ namespace FileMover
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.KidsMovies.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to Kids Movies");
+                            returnString = $"File {fileName} moved to Kids Movies";
                         }
                     }
                     else if (fileName.ToLower().Contains("2160p") || fileSizeGB > 16)
@@ -64,6 +67,7 @@ namespace FileMover
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies4K.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to 4K Movies");
+                            returnString = $"File {fileName} moved to 4K Movies";
                         }
                     }
                     else
@@ -76,16 +80,19 @@ namespace FileMover
                         {
                             File.Copy(fullFilePath, $@"{Base.data[PropertiesEnum.Movies.ToString()]}{fileName}", false);
                             Console.WriteLine($"File {fileName} moved to Movies");
+                            returnString = $"File {fileName} moved to Movies";
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     //Swallow the error if file already exists
                     Console.WriteLine($"File Exists, skipped file {fileName}\r\n{ex}");
                 }
             }
+            return returnString;
         }
+
 
         private bool CheckFileHasCopied(string FilePath)
         {

@@ -4,8 +4,9 @@ namespace FileMover
 {
     internal class TVShows
     {
-        public void MoveFile(string fullFilePath, string fileName, string episode)
+        public string MoveFile(string fullFilePath, string fileName, string episode)
         {
+            string returnString = string.Empty;
             var split = fileName.Split('.');
             string name = string.Empty;
             string season = string.Empty;
@@ -33,17 +34,19 @@ namespace FileMover
                 {
                     File.Copy(fullFilePath, @$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}");
                     Console.WriteLine($"Finished Copy {tvFile}");
-                    break;
+                    return @$"Copied to {Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}";
                 }
+
                 catch
                 {
-                    File.AppendAllText(Base.data[PropertiesEnum.LogFile.ToString()], 
+                    File.AppendAllText(Base.data[PropertiesEnum.LogFile.ToString()],
                         $"Copy Failed {Base.data[PropertiesEnum.TV.ToString()]}{name}\\Season {season}\\{tvFile}\r\n");
 
                     Console.WriteLine($"Copy Failed {Base.data[PropertiesEnum.TV.ToString()]}{name}\\Season {season}\\{tvFile}");
                     break;
                 }
             }
+            return returnString;
         }
     }
 }

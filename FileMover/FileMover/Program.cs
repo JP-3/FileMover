@@ -27,7 +27,7 @@ watcher.IncludeSubdirectories = true;
 watcher.EnableRaisingEvents = true;
 try
 {
-    while (true) { System.Threading.Thread.Sleep(60000); } //infinite loop
+    while (true) { System.Threading.Thread.Sleep(2000); } //infinite loop
 }
 catch (Exception ex)
 {
@@ -104,19 +104,18 @@ static void OnChanged(object source, FileSystemEventArgs e)
                                 {
                                     episode = Regex.Match(fileName, patternTvShow4).Value.Replace(".", "");
                                 }
-                                tvShows.MoveFile(file, fileName, episode);
+                                movedFiles.AppendLine(tvShows.MoveFile(file, fileName, episode));
                             }
                             else if (Regex.Match(fileName, pattern2000s).Success)
                             {
                                 var year = int.Parse(Regex.Match(fileName, pattern2000s).Value.Replace(".", ""));
-                                movies.MoveFile(file, fileName, year);
+                                movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
                             }
                             else if (Regex.Match(fileName, pattern1900s).Success)
                             {
                                 var year = int.Parse(Regex.Match(fileName, pattern1900s).Value.Replace(".", ""));
-                                movies.MoveFile(file, fileName, year);
+                                movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
                             }
-                            movedFiles.AppendLine(fileName);
                         }
                     }
                 }
