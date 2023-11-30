@@ -9,14 +9,15 @@ watcher.Path = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
 
 // Watch for all changes specified in the NotifyFilters  
 //enumeration.  
-watcher.NotifyFilter = NotifyFilters.Attributes |
-NotifyFilters.CreationTime |
-NotifyFilters.DirectoryName |
-NotifyFilters.FileName |
-NotifyFilters.LastAccess |
-NotifyFilters.LastWrite |
-NotifyFilters.Security |
-NotifyFilters.Size;
+watcher.NotifyFilter = NotifyFilters.FileName;
+//NotifyFilters.Attributes |
+//NotifyFilters.CreationTime |
+//NotifyFilters.DirectoryName |
+//NotifyFilters.FileName |
+//NotifyFilters.LastAccess |
+//NotifyFilters.LastWrite |
+//NotifyFilters.Security |
+//NotifyFilters.Size;
 // Watch all files.  
 watcher.Filter = "*.*";
 Dictionary<string, bool> processedFiles = new Dictionary<string, bool>();
@@ -38,10 +39,10 @@ catch (Exception ex)
 static void OnChanged(object source, FileSystemEventArgs e)
 {
     Email email = new Email();
+    StringBuilder movedFiles = new StringBuilder();
+
     try
     {
-        email.SendEmail("FileMover Started");
-
         string pattern1900s = @"\.19\d\d\.";
         string pattern2000s = @"\.20\d\d\.";
         string patternTvShow1 = @"s\d\de\d\d"; //S10EE11
@@ -50,7 +51,6 @@ static void OnChanged(object source, FileSystemEventArgs e)
         string patternTvShow4 = @"s\de\d\d";   //S1E1
         string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
-        StringBuilder movedFiles = new StringBuilder();
 
         foreach (var folder in directories)
         {
@@ -122,12 +122,10 @@ static void OnChanged(object source, FileSystemEventArgs e)
             }
             Base.processedFiles[Path.GetFileName(folder)] = true;
         }
-        string s = movedFiles.ToString();
-
-        email.SendEmail("FileMover Finished", movedFiles.ToString().Replace(" ", ""));
     }
     catch (Exception ex)
     {
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
+    email.SendEmail("FileMover Finished", movedFiles.ToString().Replace("\r\n", ""));
 }
