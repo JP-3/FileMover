@@ -43,6 +43,8 @@ static void OnChanged(object source, FileSystemEventArgs e)
 
     try
     {
+        email.SendEmail("FileMover Started");
+
         string pattern1900s = @"\.19\d\d\.";
         string pattern2000s = @"\.20\d\d\.";
         string patternTvShow1 = @"s\d\de\d\d"; //S10EE11
@@ -127,5 +129,6 @@ static void OnChanged(object source, FileSystemEventArgs e)
     {
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
-    email.SendEmail("FileMover Finished", movedFiles.ToString().Replace("\r\n", ""));
+    Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
+    email.SendEmail("FileMover Finished", movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
 }
