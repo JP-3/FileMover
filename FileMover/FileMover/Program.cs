@@ -9,7 +9,8 @@ watcher.Path = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
 
 // Watch for all changes specified in the NotifyFilters  
 //enumeration.  
-watcher.NotifyFilter = NotifyFilters.FileName;
+watcher.NotifyFilter = NotifyFilters.DirectoryName;
+    //NotifyFilters.FileName;
 //NotifyFilters.Attributes |
 //NotifyFilters.CreationTime |
 //NotifyFilters.DirectoryName |
@@ -24,7 +25,7 @@ Dictionary<string, bool> processedFiles = new Dictionary<string, bool>();
 
 // Add event handlers.  
 watcher.Created += new FileSystemEventHandler(OnChanged);
-watcher.IncludeSubdirectories = true;
+//watcher.IncludeSubdirectories = true;
 watcher.EnableRaisingEvents = true;
 try
 {
@@ -130,5 +131,10 @@ static void OnChanged(object source, FileSystemEventArgs e)
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
     Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
-    email.SendEmail("FileMover Finished", movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
+    string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
+
+    if (files != string.Empty)
+    {
+        email.SendEmail("FileMover Finished", files);
+    }
 }
