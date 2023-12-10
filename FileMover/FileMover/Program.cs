@@ -44,7 +44,7 @@ static void OnChanged(object source, FileSystemEventArgs e)
 
     try
     {
-        email.SendEmail("FileMover Started");
+        email.SendEmail("FileMover Started", e.Name);
 
         string pattern1900s = @"\.19\d\d\.";
         string pattern2000s = @"\.20\d\d\.";
@@ -136,5 +136,11 @@ static void OnChanged(object source, FileSystemEventArgs e)
     if (files != string.Empty)
     {
         email.SendEmail("FileMover Finished", files);
+        Console.WriteLine($"FileMover Finished \r\n {files}");
+    }
+    else
+    {
+        email.SendEmail("FileMover Finished Couldn't move file", e.Name);
+        Console.WriteLine($"\"FileMover Finished Couldn't move file \r\n {e.Name}");
     }
 }
