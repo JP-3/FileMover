@@ -4,47 +4,36 @@ using MyEmails;
 using System.Text;
 
 Base.GetProperties();
-FileSystemWatcher watcher = new FileSystemWatcher();
-watcher.Path = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
-
-// Watch for all changes specified in the NotifyFilters  
-//enumeration.  
-watcher.NotifyFilter = NotifyFilters.DirectoryName;
-//NotifyFilters.FileName;
-//NotifyFilters.Attributes |
-//NotifyFilters.CreationTime |
-//NotifyFilters.DirectoryName |
-//NotifyFilters.FileName |
-//NotifyFilters.LastAccess |
-//NotifyFilters.LastWrite |
-//NotifyFilters.Security |
-//NotifyFilters.Size;
-// Watch all files.  
-watcher.Filter = "*.*";
 Dictionary<string, bool> processedFiles = new Dictionary<string, bool>();
 
-// Add event handlers.  
+// Watch for any new folders
+FileSystemWatcher watcher = new FileSystemWatcher();
+watcher.Path = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
+watcher.NotifyFilter = NotifyFilters.DirectoryName; 
+watcher.Filter = "*.*";
+
+// Add event handlers
 watcher.Created += new FileSystemEventHandler(OnChanged);
-//watcher.IncludeSubdirectories = true;
 watcher.EnableRaisingEvents = true;
+
 try
 {
     while (true) { System.Threading.Thread.Sleep(2000); } //infinite loop
 }
 catch (Exception ex)
 {
-    //Email email = new Email();
-    //email.SendEmail("FileMover Crashed", ex.ToString());
+    Email email = new Email();
+    email.SendEmail("FileMover Crashed", ex.ToString());
 }
 
 static void OnChanged(object source, FileSystemEventArgs e)
 {
-    //Email email = new Email();
+    Email email = new Email();
     StringBuilder movedFiles = new StringBuilder();
 
     try
     {
-        //email.SendEmail("FileMover Started", e.Name);
+        email.SendEmail("FileMover Started", e.Name);
 
         string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
@@ -122,19 +111,19 @@ static void OnChanged(object source, FileSystemEventArgs e)
     }
     catch (Exception ex)
     {
-        //email.SendEmail("FileMover Crashed", ex.ToString());
+        email.SendEmail("FileMover Crashed", ex.ToString());
     }
     Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
     string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
 
     if (files != string.Empty)
     {
-        //email.SendEmail("FileMover Finished", files);
+        email.SendEmail("FileMover Finished", files);
         Console.WriteLine($"FileMover Finished \r\n {files}");
     }
     else
     {
-        //email.SendEmail("FileMover Finished Couldn't move file", e.Name);
+        email.SendEmail("FileMover Finished Couldn't move file", e.Name);
         Console.WriteLine($"\"FileMover Finished Couldn't move file \r\n {e.Name}");
     }
 }
