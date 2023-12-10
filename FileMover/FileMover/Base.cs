@@ -21,5 +21,13 @@ namespace FileMover
         }
 
         public static Dictionary<string, bool> processedFiles = new Dictionary<string, bool>();
+
+
+        public static string pattern1900s = @"\.19\d\d\.";   //19??
+        public static string pattern2000s = @"\.20\d\d\.";   //20??
+        public static string patternTvShow1 = @"s\d\de\d\d"; //S10EE11
+        public static string patternTvShow2 = @"s\d\de\d";   //S10E1
+        public static string patternTvShow3 = @"s\de\d\d";   //S1E11
+        public static string patternTvShow4 = @"s\de\d\d";   //S1E1
     }
 }

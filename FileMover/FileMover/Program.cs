@@ -10,7 +10,7 @@ watcher.Path = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
 // Watch for all changes specified in the NotifyFilters  
 //enumeration.  
 watcher.NotifyFilter = NotifyFilters.DirectoryName;
-    //NotifyFilters.FileName;
+//NotifyFilters.FileName;
 //NotifyFilters.Attributes |
 //NotifyFilters.CreationTime |
 //NotifyFilters.DirectoryName |
@@ -33,25 +33,19 @@ try
 }
 catch (Exception ex)
 {
-    Email email = new Email();
-    email.SendEmail("FileMover Crashed", ex.ToString());
+    //Email email = new Email();
+    //email.SendEmail("FileMover Crashed", ex.ToString());
 }
 
 static void OnChanged(object source, FileSystemEventArgs e)
 {
-    Email email = new Email();
+    //Email email = new Email();
     StringBuilder movedFiles = new StringBuilder();
 
     try
     {
-        email.SendEmail("FileMover Started", e.Name);
+        //email.SendEmail("FileMover Started", e.Name);
 
-        string pattern1900s = @"\.19\d\d\.";
-        string pattern2000s = @"\.20\d\d\.";
-        string patternTvShow1 = @"s\d\de\d\d"; //S10EE11
-        string patternTvShow2 = @"s\d\de\d";   //S10E1
-        string patternTvShow3 = @"s\de\d\d";   //S1E11
-        string patternTvShow4 = @"s\de\d\d";   //S1E1
         string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
 
@@ -87,36 +81,36 @@ static void OnChanged(object source, FileSystemEventArgs e)
                             Movies movies = new Movies();
                             TVShows tvShows = new TVShows();
 
-                            if (Regex.Match(fileName, patternTvShow1).Success || Regex.Match(fileName, patternTvShow2).Success ||
-                                    Regex.Match(fileName, patternTvShow3).Success || Regex.Match(fileName, patternTvShow4).Success)
+                            if (Regex.Match(fileName, Base.patternTvShow1).Success || Regex.Match(fileName, Base.patternTvShow2).Success ||
+                                    Regex.Match(fileName, Base.patternTvShow3).Success || Regex.Match(fileName, Base.patternTvShow4).Success)
                             {
                                 string episode = string.Empty;
-                                if (Regex.Match(fileName, patternTvShow1).Success)
+                                if (Regex.Match(fileName, Base.patternTvShow1).Success)
                                 {
-                                    episode = Regex.Match(fileName, patternTvShow1).Value.Replace(".", "");
+                                    episode = Regex.Match(fileName, Base.patternTvShow1).Value.Replace(".", "");
                                 }
-                                else if (Regex.Match(fileName, patternTvShow2).Success)
+                                else if (Regex.Match(fileName, Base.patternTvShow2).Success)
                                 {
-                                    episode = Regex.Match(fileName, patternTvShow2).Value.Replace(".", "");
+                                    episode = Regex.Match(fileName, Base.patternTvShow2).Value.Replace(".", "");
                                 }
-                                else if (Regex.Match(fileName, patternTvShow3).Success)
+                                else if (Regex.Match(fileName, Base.patternTvShow3).Success)
                                 {
-                                    episode = Regex.Match(fileName, patternTvShow3).Value.Replace(".", "");
+                                    episode = Regex.Match(fileName, Base.patternTvShow3).Value.Replace(".", "");
                                 }
                                 else
                                 {
-                                    episode = Regex.Match(fileName, patternTvShow4).Value.Replace(".", "");
+                                    episode = Regex.Match(fileName, Base.patternTvShow4).Value.Replace(".", "");
                                 }
                                 movedFiles.AppendLine(tvShows.MoveFile(file, fileName, episode));
                             }
-                            else if (Regex.Match(fileName, pattern2000s).Success)
+                            else if (Regex.Match(fileName, Base.pattern2000s).Success)
                             {
-                                var year = int.Parse(Regex.Match(fileName, pattern2000s).Value.Replace(".", ""));
+                                var year = int.Parse(Regex.Match(fileName, Base.pattern2000s).Value.Replace(".", ""));
                                 movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
                             }
-                            else if (Regex.Match(fileName, pattern1900s).Success)
+                            else if (Regex.Match(fileName, Base.pattern1900s).Success)
                             {
-                                var year = int.Parse(Regex.Match(fileName, pattern1900s).Value.Replace(".", ""));
+                                var year = int.Parse(Regex.Match(fileName, Base.pattern1900s).Value.Replace(".", ""));
                                 movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
                             }
                         }
@@ -128,19 +122,19 @@ static void OnChanged(object source, FileSystemEventArgs e)
     }
     catch (Exception ex)
     {
-        email.SendEmail("FileMover Crashed", ex.ToString());
+        //email.SendEmail("FileMover Crashed", ex.ToString());
     }
     Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
     string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
 
     if (files != string.Empty)
     {
-        email.SendEmail("FileMover Finished", files);
+        //email.SendEmail("FileMover Finished", files);
         Console.WriteLine($"FileMover Finished \r\n {files}");
     }
     else
     {
-        email.SendEmail("FileMover Finished Couldn't move file", e.Name);
+        //email.SendEmail("FileMover Finished Couldn't move file", e.Name);
         Console.WriteLine($"\"FileMover Finished Couldn't move file \r\n {e.Name}");
     }
 }

@@ -1,7 +1,8 @@
-﻿using TMDbLib.Client;
+﻿using System.Text.RegularExpressions;
+using TMDbLib.Client;
 using TMDbLib.Objects.General;
+using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
-using MyEmails;
 
 namespace FileMover
 {
@@ -15,26 +16,25 @@ namespace FileMover
 
             if (!fileName.ToLower().Contains("sample") || fileInfo.Length > 500000000)
             {
-                string name = string.Empty;
-                var split = fileName.Split('.');
+                int yearIndex;
 
-                foreach (var item in split)
+                //Find the year index and remove everything after leaving you with the movie name... Hopefully
+                if (Regex.Match(fileName, Base.pattern2000s).Success)
                 {
-                    //If it's an integer it's either the year or maybe 1080P/2160P
-                    if (int.TryParse(item, out _))
-                    {
-                        break;
-                    }
-                    name = $"{name} {item}";
-                    string movieYear = string.Empty;
+                    yearIndex = Regex.Match(fileName, Base.pattern2000s).Index;
                 }
-                TMDbClient client = new TMDbClient(Base.data[PropertiesEnum.apiKey.ToString()]);
+                else //pattern1900s
+                {
+                    yearIndex = Regex.Match(fileName, Base.pattern1900s).Index;
+                }
+                string movieName = fileName.Remove(yearIndex).Replace(".", " ");
 
+                TMDbClient client = new TMDbClient(Base.data[PropertiesEnum.apiKey.ToString()]);
                 SearchContainer<SearchMovie> movie = new SearchContainer<SearchMovie>();
-                movie = client.SearchMovieAsync(name.TrimStart(), 0, false, year, null, year).Result;
+                movie = client.SearchMovieAsync(movieName, 0, false, year, null, year).Result;
                 if (movie.TotalResults == 0)
                 {
-                    movie = client.SearchMovieAsync(name.TrimStart()).Result;
+                    movie = client.SearchMovieAsync(movieName).Result;
                 }
 
                 try
