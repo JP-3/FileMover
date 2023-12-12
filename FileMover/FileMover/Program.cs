@@ -84,18 +84,14 @@ static void OnChanged(object source, FileSystemEventArgs e)
     {
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
-    Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
-    string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
-
+    //Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
+    //string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
+    string files = movedFiles.ToString().Replace("\r\n", "");
+    string formattedFiles = movedFiles.ToString();
     if (files != string.Empty)
     {
-        email.SendEmail("FileMover Finished", files);
-        Console.WriteLine($"FileMover Finished \r\n {files}");
-    }
-    else
-    {
-        email.SendEmail("FileMover Finished Couldn't move file", e.Name);
-        Console.WriteLine($"\"FileMover Finished Couldn't move file \r\n {e.Name}");
+        Console.WriteLine($"FileMover Finished \r\n {formattedFiles}");
+        email.SendEmail("FileMover Finished", formattedFiles);
     }
 }
 
