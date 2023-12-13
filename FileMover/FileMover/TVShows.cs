@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using MyEmails;
+using System.Text.RegularExpressions;
 
 namespace FileMover
 {
@@ -25,6 +26,12 @@ namespace FileMover
                 var tvFile = Path.GetFileName(fullFilePath);
 
                 Console.WriteLine($"Starting Copy {tvFile}");
+                if (!Directory.Exists(@$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}"))
+                {
+                    Email email = new Email();
+                    email.SendEmail("Folder Created", @$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}");
+                    Directory.CreateDirectory(@$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}");
+                }
 
                 if (!File.Exists(@$"{Base.data[PropertiesEnum.TV.ToString()]}{name}\Season {season}\{tvFile}"))
                 {

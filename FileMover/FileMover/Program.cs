@@ -34,8 +34,6 @@ static void OnChanged(object source, FileSystemEventArgs e)
 
     try
     {
-        email.SendEmail("FileMover Started", e.Name);
-
         string filePath = Base.data[PropertiesEnum.FinishedTorrents.ToString()];
         var directories = Directory.GetDirectories(filePath);
 
@@ -84,8 +82,7 @@ static void OnChanged(object source, FileSystemEventArgs e)
     {
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
-    //Console.WriteLine(movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString());
-    //string files = movedFiles.Replace("\r\n", "").Replace("Copied to", "\r\n").ToString();
+
     string files = movedFiles.ToString().Replace("\r\n", "");
     string formattedFiles = movedFiles.ToString();
     if (files != string.Empty)
