@@ -18,12 +18,12 @@ namespace FileMover
                 if (Regex.Match(fileName, Base.patternSeason1).Success)
                 {
                     season = episode.Substring(1, 2);
-                    name = fileName.Remove(fileName.IndexOf(episode)).Replace(".", "").TrimEnd();
+                    name = fileName.Remove(fileName.IndexOf(episode)).Replace(".", " ").TrimEnd();
                 }
                 else if (Regex.Match(fileName, Base.patternSeason2).Success)
                 {
                     season = $"0{episode.Substring(1, 1)}";
-                    name = fileName.Remove(fileName.IndexOf(episode)).Replace(".", "").TrimEnd();
+                    name = fileName.Remove(fileName.IndexOf(episode)).Replace(".", " ").TrimEnd();
                 }
 
                 //Find the year index and remove everything after leaving you with the movie name... Hopefully
@@ -37,7 +37,7 @@ namespace FileMover
                     yearIndex = Regex.Match(fileName, Base.pattern1900sNoPeriod).Index;
                     name = fileName.Remove(yearIndex).Replace(".", " ");
                 }
-                name = name.First().ToString().ToUpper() + name.Substring(1).Trim();
+                name = name.First().ToString().ToUpper() + name.Substring(1).TrimEnd();
                 var tvShow = Base.data[PropertiesEnum.TV.ToString()];
                 var tvFile = Path.GetFileName(fullFilePath);
 
