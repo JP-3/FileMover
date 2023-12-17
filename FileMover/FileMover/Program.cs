@@ -88,7 +88,7 @@ static void OnChanged(object source, FileSystemEventArgs e)
     if (files != string.Empty)
     {
         Console.WriteLine($"FileMover Finished \r\n {formattedFiles}");
-        email.SendEmail("FileMover Finished", formattedFiles);
+        email.SendEmail("FileMover Finished", files);
     }
 }
 
