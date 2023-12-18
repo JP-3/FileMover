@@ -55,13 +55,16 @@ static void OnChanged(object source, FileSystemEventArgs e)
                     //If it's a .rar'd thing then look to see if it's beeen unrared yet otherwise unrar it
                     if (Directory.GetFiles(directory, "*.mkv").Length < 1 && Directory.GetFiles(directory, "*.r00").Length == 1)
                     {
-                        System.Diagnostics.Process p = new System.Diagnostics.Process();
-                        p.StartInfo.CreateNoWindow = true;
-                        p.StartInfo.UseShellExecute = false;
-                        p.StartInfo.FileName = "\"C:\\Program Files\\WinRAR\\winrar.exe\"";
-                        p.StartInfo.Arguments = string.Format(@"x -s -o- ""{0}"" *.* ""{1}\""", Directory.GetFiles(directory, "*.r00").First(), Path.GetFullPath(directory));
-                        p.Start();
-                        p.WaitForExit();
+                        System.Diagnostics.Process process = new System.Diagnostics.Process();
+                        using (process)
+                        {
+                            process.StartInfo.CreateNoWindow = true;
+                            process.StartInfo.UseShellExecute = false;
+                            process.StartInfo.FileName = "\"C:\\Program Files\\WinRAR\\winrar.exe\"";
+                            process.StartInfo.Arguments = string.Format(@"x -s -o- ""{0}"" *.* ""{1}\""", Directory.GetFiles(directory, "*.r00").First(), Path.GetFullPath(directory));
+                            process.Start();
+                            process.WaitForExit();
+                        }
                         Console.WriteLine($"Unzipped file in {directory}");
                     }
 
