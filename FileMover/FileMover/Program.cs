@@ -30,7 +30,7 @@ catch (Exception ex)
 static void OnChanged(object source, FileSystemEventArgs e)
 {
     Email email = new Email();
-    StringBuilder movedFiles = new StringBuilder();
+    List<string> movedFiles = new List<string>();
 
     try
     {
@@ -86,17 +86,24 @@ static void OnChanged(object source, FileSystemEventArgs e)
         email.SendEmail("FileMover Crashed", ex.ToString());
     }
 
-    string files = movedFiles.ToString().Replace("\r\n", "");
-    string formattedFiles = movedFiles.ToString();
-    if (files != string.Empty)
+    for (int i = movedFiles.Count-1; i > 0; i--)
+    {
+        if (movedFiles[i] == string.Empty)
+        {
+            movedFiles.Remove(movedFiles[i]);
+        }
+    } 
+
+    string formattedFiles = String.Join($"\r\n", movedFiles);
+    if (formattedFiles != string.Empty)
     {
         Console.WriteLine($"FileMover Finished \r\n {formattedFiles}");
-        email.SendEmail("FileMover Finished", files);
+        email.SendEmail("FileMover Finished", formattedFiles);
     }
 }
 
 
-static StringBuilder MoveFiles(StringBuilder movedFiles, string folder)
+static List<string> MoveFiles(List<string> movedFiles, string folder)
 {
 
     //Recursive to get to the lowest folder for the files. Sometimes you have Full Shows with ShowName>Season1>Episodes. or multiple seasons.
@@ -113,7 +120,7 @@ static StringBuilder MoveFiles(StringBuilder movedFiles, string folder)
     return movedFiles;
 }
 
-static StringBuilder CopyFiles(StringBuilder movedFiles, string folder)
+static List<string> CopyFiles(List<string> movedFiles, string folder)
 {
     foreach (var file in Directory.GetFiles(folder))
     {
@@ -145,17 +152,17 @@ static StringBuilder CopyFiles(StringBuilder movedFiles, string folder)
                 {
                     episode = Regex.Match(fileName, Base.patternTvShow4).Value.Replace(".", "");
                 }
-                movedFiles.AppendLine(tvShows.MoveFile(file, fileName, episode));
+                movedFiles.Add(tvShows.MoveFile(file, fileName, episode));
             }
             else if (Regex.Match(fileName, Base.pattern2000s).Success)
             {
                 var year = int.Parse(Regex.Match(fileName, Base.pattern2000s).Value.Replace(".", ""));
-                movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
+                movedFiles.Add(movies.MoveFile(file, fileName, year));
             }
             else if (Regex.Match(fileName, Base.pattern1900s).Success)
             {
                 var year = int.Parse(Regex.Match(fileName, Base.pattern1900s).Value.Replace(".", ""));
-                movedFiles.AppendLine(movies.MoveFile(file, fileName, year));
+                movedFiles.Add(movies.MoveFile(file, fileName, year));
             }
         }
     }
